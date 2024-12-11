@@ -1,0 +1,27 @@
+spring:
+  application:
+    name:
+      user-service
+  cloud:
+    config:
+      enabled: true
+      fail-fast: true
+      label: ${CONFIG_GITHUB_LABEL}
+      uri: http://${CONFIG_HOST}:8888/
+  config:
+    import: optional:config-service:http://${CONFIG_HOST}:8888/, optional:file:.env[.properties]
+  profiles:
+    active: dev
+
+eureka:
+  client:
+    service-url:
+      uris: http://${EUREKA_HOST}:8761/eureka/
+      defaultZone: http://${EUREKA_HOST}:8761/eureka/
+    healthcheck:
+      enabled: true
+    enabled: true
+  instance:
+    secure-port-enabled: true
+    non-secure-port-enabled: false
+    instance-id: ${spring.application.name}
