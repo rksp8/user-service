@@ -1,18 +1,16 @@
 package com.rksp8.userservice.config.security;
 
-import com.rksp8.userservice.service.auth.CustomOauth2Service;
-import com.rksp8.userservice.service.auth.CustomUserDetails;
-import com.rksp8.userservice.service.user.UserDetailsServiceImpl;
+
 import com.rksp8.userservice.service.user.UserService;
 import com.rksp8.userservice.util.CustomOauth2User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -23,11 +21,12 @@ import java.util.Map;
 @AllArgsConstructor
 public class CustomAuthHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    @Autowired
     private UserService userService;
 
     public CustomAuthHandler() {
         super();
-        setDefaultTargetUrl("http://localhost:8080/users/me");
+        setDefaultTargetUrl("http://localhost:8080/swagger-ui/index.html");
         setAlwaysUseDefaultTargetUrl(true);
     }
 
@@ -39,9 +38,10 @@ public class CustomAuthHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         for (String attribute: attributes.keySet().stream().toList()) {
             System.out.println(attribute);
+            System.out.println(attributes.get(attribute));
         }
 
-        String username = (String) attributes.get("username");
+        String username = (String) attributes.get("name");
 
         userService.createUser(username);
 

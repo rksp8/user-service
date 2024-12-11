@@ -9,7 +9,9 @@ spring:
       label: master
       uri: http://localhost:8888/
   config:
-    import: optional:config-service:http://localhost:8888/, optional:file:.env[.properties]
+    import:
+      - optional:config-service:http://localhost:8888/
+      - optional:file:.env[.properties]
   profiles:
     active: dev
 

@@ -27,23 +27,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createUser(String username) {
+        User newUser = userRepository.findByUsername(username).orElse(null);
 
-        if (userRepository.findByUsername(username).isEmpty()) {
+        if(newUser == null) {
 
-            User user = new User();
+            newUser = new User();
 
-            user.setUsername(username);
+            newUser.setUsername(username);
 
-            user.setRole(Role.USER);
+            newUser.setRole(Role.USER);
 
-            user.setProvider(Provider.GOOGLE);
+            newUser.setProvider(Provider.GOOGLE);
 
-            user.setCreatedAt(LocalDateTime.now());
+            newUser.setCreatedAt(LocalDateTime.now());
 
-            userRepository.save(user);
+            userRepository.save(newUser);
 
             log.info("User {} created", username);
         }
+
+        userRepository.save(newUser);
     }
 
     @Override
@@ -67,7 +70,6 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
 
-        System.out.println("Principal type: " + principal.getClass().getName());
 
         if (!(authentication.getPrincipal() instanceof CustomOauth2User)) {
             throw new IllegalStateException("Current user is not authenticated with OAuth2");
@@ -76,6 +78,6 @@ public class UserServiceImpl implements UserService {
         CustomOauth2User oauth2User = (CustomOauth2User) principal;
         Map<String, Object> attributes = oauth2User.getAttributes();
 
-        return userMapper.toDto(userRepository.findByUsername((String) attributes.get("username")).orElseThrow(() -> new RuntimeException("User not found")));
+        return userMapper.toDto(userRepository.findByUsername((String) attributes.get("name")).orElseThrow(() -> new RuntimeException("User not found")));
     }
 }

@@ -20,6 +20,8 @@ public class SecurityConfig {
 
     private final CustomAuthHandler customAuthenticationHandler;
 
+    private final CustomLogoutHandler customLogoutSuccessHandler;
+
     public static final String[] PERMITTED_URL = {
             "/users/**", "/swagger-ui/**", "/logout", "/swagger-resources/*",
             "/v3/api-docs/**", "/actuator/**",
@@ -60,7 +62,10 @@ public class SecurityConfig {
                 .oauth2Login(
                         oauth2Login -> oauth2Login
                                 .successHandler(customAuthenticationHandler)
-                );
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessHandler(customLogoutSuccessHandler));
         return http.build();
     }
 
