@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
+    @Transactional
     public void createUser(String username) {
         User newUser = userRepository.findByUsername(username).orElse(null);
 
@@ -50,22 +52,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto getUserByUsername(String username) {
         return userMapper.toDto(userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found")));
     }
 
     @Override
+    @Transactional
     public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream().map(userMapper::toDto).toList();
     }
 
     @Override
+    @Transactional
     public void deleteUserByUsername(String username) {
 
         userRepository.findByUsername(username).ifPresent(userRepository::delete);
     }
 
     @Override
+    @Transactional
     public UserDto getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
