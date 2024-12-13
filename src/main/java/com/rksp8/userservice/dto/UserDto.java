@@ -9,5 +9,4 @@ public class UserDto {
     private Long id;
     private String username;
     private List<PostDto> posts;
-    private List<RatingDto> ratings;
 }

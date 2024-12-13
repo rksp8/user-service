@@ -1,10 +1,12 @@
 package com.rksp8.userservice.entity;
 
+import com.rksp8.userservice.dto.PostDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor

@@ -1,5 +1,7 @@
 package com.rksp8.userservice.service.user;
 
+import com.rksp8.userservice.client.PostServiceClient;
+import com.rksp8.userservice.dto.PostDto;
 import com.rksp8.userservice.dto.UserDto;
 import com.rksp8.userservice.entity.Provider;
 import com.rksp8.userservice.entity.Role;
@@ -25,6 +27,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PostServiceClient postServiceClient;
 
     @Override
     @Transactional
@@ -54,15 +57,20 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto getUserByUsername(String username) {
-        return userMapper.toDto(userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found")));
+        List<PostDto> userPosts = postServiceClient.getPostsByAuthor(username);
+        return userMapper.toDto(userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found")), userPosts);
     }
 
     @Override
     @Transactional
     public List<UserDto> getAllUsers() {
-        return userRepository.findAll().stream().map(userMapper::toDto).toList();
+        return userRepository.findAll().stream()
+                .map(user -> {
+                    List<PostDto> userPosts = postServiceClient.getPostsByAuthor(user.getUsername());
+                    return userMapper.toDto(user, userPosts);
+                })
+                .toList();
     }
-
     @Override
     @Transactional
     public void deleteUserByUsername(String username) {
@@ -84,6 +92,9 @@ public class UserServiceImpl implements UserService {
         CustomOauth2User oauth2User = (CustomOauth2User) principal;
         Map<String, Object> attributes = oauth2User.getAttributes();
 
-        return userMapper.toDto(userRepository.findByUsername((String) attributes.get("name")).orElseThrow(() -> new RuntimeException("User not found")));
+        String username = (String) attributes.get("name");
+        List<PostDto> userPosts = postServiceClient.getPostsByAuthor(username);
+
+        return userMapper.toDto(userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found")), userPosts);
     }
 }
