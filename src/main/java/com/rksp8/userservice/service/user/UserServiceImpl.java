@@ -54,6 +54,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(newUser);
     }
 
+
     @Override
     @Transactional
     public UserDto getUserByUsername(String username) {
