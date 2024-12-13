@@ -26,7 +26,7 @@ public class CustomAuthHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     public CustomAuthHandler() {
         super();
-        setDefaultTargetUrl("http://localhost:8080/swagger-ui/index.html");
+        setDefaultTargetUrl("http://localhost:8083/users/me");
         setAlwaysUseDefaultTargetUrl(true);
     }
 

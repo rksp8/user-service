@@ -17,6 +17,6 @@ public class CustomLogoutHandler implements LogoutSuccessHandler {
         System.out.println("User successfully logged out");
 
         response.setStatus(HttpServletResponse.SC_OK);
-        response.sendRedirect("/swagger-ui/index.html");
+        response.sendRedirect("/users");
     }
 }
