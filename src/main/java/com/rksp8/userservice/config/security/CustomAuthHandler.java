@@ -26,7 +26,7 @@ public class CustomAuthHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     public CustomAuthHandler() {
         super();
-        setDefaultTargetUrl("http://localhost:8083/users/me");
+        setDefaultTargetUrl("http://localhost:8080/users/me");
         setAlwaysUseDefaultTargetUrl(true);
     }
 

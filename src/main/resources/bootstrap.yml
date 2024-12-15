@@ -7,18 +7,18 @@ spring:
       enabled: true
       fail-fast: true
       label: master
-      uri: http://localhost:8888/
+      uri: http://config-service:8888/
   config:
     import:
-      - optional:config-service:http://localhost:8888/
+      - optional:config-service:http://config-service:8888/
   profiles:
     active: dev
 
 eureka:
   client:
     service-url:
-      uris: http://localhost:8761/eureka/
-      defaultZone: http://localhost:8761/eureka/
+      uris: http://eureka-service:8761/eureka/
+      defaultZone: http://eureka-service:8761/eureka/
     healthcheck:
       enabled: true
     enabled: true
